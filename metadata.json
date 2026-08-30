@@ -1,0 +1,6 @@
+{
+  "name": "ſɭƨᴜᶗ‹",
+  "description": "Continuous coordinate tracking, Ktash grid logging, path map with daily filter, screen ruler, temperature, daylight and daylength calculator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
