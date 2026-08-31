@@ -49,11 +49,8 @@ class LokoRepository(
     val nomoj = akiriNomojn(kadro)
     val dato = cax2lStafl2(nunMs)
 
-    var temperaturoK: Double? = null
-    val cels = veteroServo.preniTemperaturonCelsius(lat, lon)
-    if (cels != null) {
-      temperaturoK = celsiusAlKelvino(cels)
-    }
+    val cels = veteroServo.preniTemperaturonCelsius(lat, lon) ?: kalkuliProksimumanTemperaturonCelsius(lat, lon, nunMs)
+    val temperaturoK = celsiusAlKelvino(cels)
 
     val novaProtokolo = LokoLogEntity(
       latitudo = lat,

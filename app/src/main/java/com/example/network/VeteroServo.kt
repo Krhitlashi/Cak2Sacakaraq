@@ -18,7 +18,10 @@ class VeteroServo {
   suspend fun preniTemperaturonCelsius(lat: Double, lon: Double): Double? = withContext(Dispatchers.IO) {
     try {
       val url = "https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,weather_code"
-      val peto = Request.Builder().url(url).build()
+      val peto = Request.Builder()
+        .url(url)
+        .header("User-Agent", "KtashApp/1.0")
+        .build()
       kliento.newCall(peto).execute().use { respondo ->
         if (respondo.isSuccessful) {
           val korpo = respondo.body?.string() ?: return@withContext null
@@ -31,7 +34,7 @@ class VeteroServo {
           }
         }
       }
-    } catch (_: Exception) {
+    } catch (_: Throwable) {
       // Reto ne disponeblas
     }
     null

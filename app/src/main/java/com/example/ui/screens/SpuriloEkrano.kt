@@ -408,7 +408,7 @@ fun SpuriloEkrano(
       modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-      val cels = nunaTemperaturoCelsius ?: 20.0
+      val cels = nunaTemperaturoCelsius
       val hia = celsiusAlHia(cels)
       val kelv = celsiusAlKelvino(cels)
 

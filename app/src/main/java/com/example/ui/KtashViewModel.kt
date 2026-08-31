@@ -152,14 +152,25 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
   val konservitajLokoj: StateFlow<List<EsplorStacio>> = _konservitajLokoj.asStateFlow()
 
   // ⟪ Vetero & Temperaturo ⟫
-  private val _nunaTemperaturoCelsius = MutableStateFlow<Double?>(null)
-  val nunaTemperaturoCelsius: StateFlow<Double?> = _nunaTemperaturoCelsius.asStateFlow()
+  private val _nunaTemperaturoCelsius = MutableStateFlow(
+    kalkuliProksimumanTemperaturonCelsius(47.48, -122.21)
+  )
+  val nunaTemperaturoCelsius: StateFlow<Double> = _nunaTemperaturoCelsius.asStateFlow()
 
-  private val _esplorLoko = MutableStateFlow(EsplorStacio("Nuna Pozicio", 47.48, -122.21))
+  private val _esplorLoko = MutableStateFlow(
+    EsplorStacio(
+      id = "loc_cur",
+      nomo = "Nuna Pozicio",
+      latitudo = 47.48,
+      longitudo = -122.21
+    )
+  )
   val esplorLoko: StateFlow<EsplorStacio> = _esplorLoko.asStateFlow()
 
-  private val _esplorTemperaturoCelsius = MutableStateFlow<Double?>(null)
-  val esplorTemperaturoCelsius: StateFlow<Double?> = _esplorTemperaturoCelsius.asStateFlow()
+  private val _esplorTemperaturoCelsius = MutableStateFlow(
+    kalkuliProksimumanTemperaturonCelsius(47.48, -122.21)
+  )
+  val esplorTemperaturoCelsius: StateFlow<Double> = _esplorTemperaturoCelsius.asStateFlow()
 
   // ⟪ Mesaĝoj & Sciigoj ⟫
   private val _sciigoTeksto = MutableStateFlow<String?>(null)
@@ -189,11 +200,25 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
       }
     }
 
-    // Aŭtomata veter-peto kun senreta rezervo
+    // Aŭtomata veter-peto por nuna loko kaj esplor-loko
     viewModelScope.launch {
       lokoManagero.nunaLoko.collect { loko ->
+        val kalkulita = kalkuliProksimumanTemperaturonCelsius(loko.latitudo, loko.longitudo)
+        _nunaTemperaturoCelsius.value = kalkulita
+        if (_esplorLoko.value.id == "loc_cur") {
+          _esplorLoko.value = _esplorLoko.value.copy(
+            latitudo = loko.latitudo,
+            longitudo = loko.longitudo
+          )
+          _esplorTemperaturoCelsius.value = kalkulita
+        }
         val cels = veteroServo.preniTemperaturonCelsius(loko.latitudo, loko.longitudo)
-        _nunaTemperaturoCelsius.value = cels ?: kalkuliProksimumanTemperaturonCelsius(loko.latitudo, loko.longitudo)
+        if (cels != null) {
+          _nunaTemperaturoCelsius.value = cels
+          if (_esplorLoko.value.id == "loc_cur") {
+            _esplorTemperaturoCelsius.value = cels
+          }
+        }
       }
     }
 
@@ -597,16 +622,29 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
     val novaListo = _konservitajLokoj.value.filter { it.id != stacio.id }
     _konservitajLokoj.value = novaListo
     if (_esplorLoko.value.id == stacio.id) {
-      _esplorLoko.value = EsplorStacio("loc_cur", "Nuna Pozicio", lokoManagero.nunaLoko.value.latitudo, lokoManagero.nunaLoko.value.longitudo)
+      val nunaStacio = EsplorStacio("loc_cur", "Nuna Pozicio", lokoManagero.nunaLoko.value.latitudo, lokoManagero.nunaLoko.value.longitudo)
+      elektiEsplorStacion(nunaStacio)
     }
     _sciigoTeksto.value = "Forigis lokon - ${stacio.nomo}"
   }
 
   fun elektiEsplorStacion(stacio: EsplorStacio) {
     _esplorLoko.value = stacio
+    val kalkulita = if (stacio.id == "loc_cur") {
+      _nunaTemperaturoCelsius.value
+    } else {
+      kalkuliProksimumanTemperaturonCelsius(stacio.latitudo, stacio.longitudo)
+    }
+    _esplorTemperaturoCelsius.value = kalkulita
+
     viewModelScope.launch {
       val cels = veteroServo.preniTemperaturonCelsius(stacio.latitudo, stacio.longitudo)
-      _esplorTemperaturoCelsius.value = cels
+      if (cels != null) {
+        _esplorTemperaturoCelsius.value = cels
+        if (stacio.id == "loc_cur") {
+          _nunaTemperaturoCelsius.value = cels
+        }
+      }
     }
   }
 

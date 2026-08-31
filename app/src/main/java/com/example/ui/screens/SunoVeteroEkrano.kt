@@ -73,7 +73,7 @@ fun SunoVeteroEkrano(
     castifeh2(esplorLoko.latitudo, esplorLoko.longitudo, nunaTempoMs)
   }
 
-  val cels = esplorTemperaturoCelsius ?: 21.0
+  val cels = esplorTemperaturoCelsius
   val hia = celsiusAlHia(cels)
   val kelv = celsiusAlKelvino(cels)
   val fahr = celsiusAlFahrenheit(cels)
@@ -101,7 +101,7 @@ fun SunoVeteroEkrano(
       horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
       item {
-        val ĉuMia = esplorLoko.id == "loc_cur" || esplorLoko.nomo == tradukoj.nunaPozicio
+        val ĉuMia = esplorLoko.id == "loc_cur" || esplorLoko.nomo == "Nuna Pozicio" || esplorLoko.nomo == tradukoj.nunaPozicio
         val miaInterago = remember { MutableInteractionSource() }
         val miaPremita by miaInterago.collectIsPressedAsState()
         val miaFormo = animaciaButonFormo(miaPremita || ĉuMia, bazaStart = 16.dp, bazaEnd = 6.dp)
@@ -137,7 +137,7 @@ fun SunoVeteroEkrano(
               tint = if (ĉuMia) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
             )
             Text(
-              text = tradukoj.miaLoko,
+              text = tradukoj.nunaPozicio,
               color = if (ĉuMia) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,
               fontSize = 11.sp,
               fontWeight = FontWeight.Bold
@@ -466,7 +466,7 @@ fun SunoVeteroEkrano(
             fontWeight = FontWeight.Bold
           )
           Text(
-            text = esplorLoko.nomo,
+            text = if (esplorLoko.id == "loc_cur" || esplorLoko.nomo == "Nuna Pozicio" || esplorLoko.nomo == tradukoj.nunaPozicio) tradukoj.nunaPozicio else esplorLoko.nomo,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             fontSize = 11.sp
           )
