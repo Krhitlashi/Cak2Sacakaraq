@@ -336,6 +336,7 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
     viewModelScope.launch {
       val tago = _elektitaTago.value
       val bazo10 = _uzuBazo10.value
+      val lingvo = _elektitaLingvo.value
       val dosierNomo = akiriEksportDosierNomon()
 
       if (tago != null) {
@@ -347,9 +348,11 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
           val tempo = castifeh2(ero.tempoMilisekundoj)
           val hqQH = tempo.alTeksto(bazo10)
           val coords = ero.ksakaNomo.ifEmpty { ero.latinaNomo }
+          val vert = ero.akiriVertikalan()
+          val vertStr = if (bazo10) vert.alDekumaTeksto(lingvo) else vert.alOksalaTeksto()
           val peuDist = formatiOksaleAuxDekume(ero.distancoDeAntauaPeu, bazo10, 2)
           val hiaTemp = formatiOksaleAuxDekume(kelvinoAlHia(ero.temperaturoKelvino ?: 0.0), bazo10, 1)
-          sb.append("$hqQH — $coords — $peuDist — $hiaTemp\n")
+          sb.append("$hqQH — $coords — $vertStr — $peuDist — $hiaTemp\n")
         }
         onFinita(dosierNomo, sb.toString().trimEnd())
       } else {
@@ -362,9 +365,11 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
             val tempo = castifeh2(ero.tempoMilisekundoj)
             val hqQH = tempo.alTeksto(bazo10)
             val coords = ero.ksakaNomo.ifEmpty { ero.latinaNomo }
+            val vert = ero.akiriVertikalan()
+            val vertStr = if (bazo10) vert.alDekumaTeksto(lingvo) else vert.alOksalaTeksto()
             val peuDist = formatiOksaleAuxDekume(ero.distancoDeAntauaPeu, bazo10, 2)
             val hiaTemp = formatiOksaleAuxDekume(kelvinoAlHia(ero.temperaturoKelvino ?: 0.0), bazo10, 1)
-            sb.append("$hqQH — $coords — $peuDist — $hiaTemp\n")
+            sb.append("$hqQH — $coords — $vertStr — $peuDist — $hiaTemp\n")
           }
           sb.append("\n")
         }
@@ -414,13 +419,15 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
             }
           }
 
-          // Divido de protokola linio: Hq Q H — KsakaCoords — PeuDist — HiaTemp
+          // Divido de protokola linio - Hq Q H — KsakaCoords — [VertikalaLoko —] PeuDist — HiaTemp
           val partoj = l.split(Regex("\\s*—\\s*|\\s*–\\s*|\\s+-\\s+"))
           if (partoj.size >= 4) {
             val tempoParto = partoj[0].trim()
             val coordsParto = partoj[1].trim()
-            val peuParto = partoj[2].trim()
-            val hiaParto = partoj[3].trim()
+            val hasVert = partoj.size >= 5
+            val vertParto = if (hasVert) partoj[2].trim() else ""
+            val peuParto = if (hasVert) partoj[3].trim() else partoj[2].trim()
+            val hiaParto = if (hasVert) partoj[4].trim() else partoj[3].trim()
 
             // 1. Tempo
             val tVortoj = tempoParto.split(Regex("\\s+")).filter { it.isNotEmpty() }
@@ -435,12 +442,15 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
             val (lat, lon) = kadroAlLatLon(kadro.v1, kadro.h1, kadro.v2, kadro.h2, kadro.v3, kadro.h3, kadro.v4, kadro.h4)
             val nomoj = akiriNomojn(kadro)
 
-            // 3. Distanco
+            // 3. Vertikala Loko
+            val vertikalo = if (hasVert) malakiriVertikalanLokon(vertParto) ?: akiriVertikalanLokon(0.0) else akiriVertikalanLokon(0.0)
+
+            // 4. Distanco
             val distPeu = malvab6cajaDomani(peuParto)
             val distMetroj = peuAlMetroj(distPeu)
             val distC2ta = metrojAlC2ta(distMetroj)
 
-            // 4. Temperaturo
+            // 5. Temperaturo
             val tempHia = malvab6cajaDomani(hiaParto)
             val tempK = if (tempHia > 0.0) hiaAlKelvino(tempHia) else null
 
@@ -449,6 +459,11 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
                 id = 0L,
                 latitudo = lat,
                 longitudo = lon,
+                altecoMetroj = 0.0,
+                z1 = vertikalo.z1,
+                z2 = vertikalo.z2,
+                z3 = vertikalo.z3,
+                z4 = vertikalo.z4,
                 tempoMilisekundoj = tempoMs,
                 ksakaNomo = nomoj.ksaka,
                 latinaNomo = nomoj.latina,
@@ -493,6 +508,10 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
         val obj = org.json.JSONObject().apply {
           put("latitudo", ero.latitudo)
           put("longitudo", ero.longitudo)
+          put("z1", ero.z1)
+          put("z2", ero.z2)
+          put("z3", ero.z3)
+          put("z4", ero.z4)
           put("tempoMilisekundoj", ero.tempoMilisekundoj)
           put("ksakaNomo", ero.ksakaNomo)
           put("latinaNomo", ero.latinaNomo)
@@ -544,6 +563,18 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
           val obj = jsonArray.getJSONObject(i)
           val lat = obj.optDouble("latitudo", 0.0)
           val lon = obj.optDouble("longitudo", 0.0)
+          val alteco = obj.optDouble("altecoMetroj", 0.0)
+          val vertikalo = if (obj.has("z1")) {
+            VertikalaLoko(
+              obj.optInt("z1", 0),
+              obj.optInt("z2", 0),
+              obj.optInt("z3", 0),
+              obj.optInt("z4", 0),
+              alteco
+            )
+          } else {
+            akiriVertikalanLokon(alteco)
+          }
           val tempo = obj.optLong("tempoMilisekundoj", System.currentTimeMillis())
           val ksaka = obj.optString("ksakaNomo", "")
           val latina = obj.optString("latinaNomo", "")
@@ -571,6 +602,11 @@ class KtashViewModel(aplikaĵo: Application) : AndroidViewModel(aplikaĵo) {
               id = 0L,
               latitudo = lat,
               longitudo = lon,
+              altecoMetroj = 0.0,
+              z1 = vertikalo.z1,
+              z2 = vertikalo.z2,
+              z3 = vertikalo.z3,
+              z4 = vertikalo.z4,
               tempoMilisekundoj = tempo,
               ksakaNomo = ksaka,
               latinaNomo = latina,

@@ -153,6 +153,9 @@ data class TradukTekstoj(
   val pasoj: String,
   val pasRapido: String,
   val restarigiPasojn: String,
+  val vertikalaLokoTitolo: String,
+  val alteco: String,
+  val spacoAlKerno: String,
 )
 
 val ESPERANTO_TEKSTOJ = TradukTekstoj(
@@ -281,6 +284,9 @@ val ESPERANTO_TEKSTOJ = TradukTekstoj(
   pasoj = "Pasoj",
   pasRapido = "Paŝrapido",
   restarigiPasojn = "Restarigi",
+  vertikalaLokoTitolo = "Vertikala Loko ( 4 Niveloj de 64 )",
+  alteco = "Alteco",
+  spacoAlKerno = "Spaco al Kerno",
 )
 
 val ENGLISH_TEKSTOJ = TradukTekstoj(
@@ -409,6 +415,9 @@ val ENGLISH_TEKSTOJ = TradukTekstoj(
   pasoj = "Steps",
   pasRapido = "Pace",
   restarigiPasojn = "Reset",
+  vertikalaLokoTitolo = "Vertical Location ( 4 Divisions of 64 )",
+  alteco = "Elevation",
+  spacoAlKerno = "Space to Core",
 )
 
 // ⟪ AIH Lingvo ( Matching Provided HTML/JS Translations with English Placeholders for remainder ) ⟫
@@ -538,6 +547,9 @@ val AIH_PLACEHOLDER_TEKSTOJ = TradukTekstoj(
   pasoj = "j͑ʃ'ɔ ſןᴜ ɭʃэ }ʃꞇ",
   pasRapido = "j͑ʃɔ ֭ſɭɔ }ʃꞇ",
   restarigiPasojn = "ɭʃɜ j͑ʃᴜᶗ‹",
+  vertikalaLokoTitolo = "ſɟɔ ſןw ꞁȷ̀ᴜ ɽ͑ʃ'ᴜȝ",
+  alteco = "ꞁȷ̀ɔƴ ꞁȷ̀ᴜ }ʃꞇ",
+  spacoAlKerno = "ſ͕ɭᴜ ŋᷠɹ ֭ſɭᴜ ŋᷠw j͑ʃɔ ı],ᴜƴ j͑ʃɜ j͑ʃƨɹ",
 )
 
 // ⟪ Lojban Lingvo ( la .lojban. ) ⟫
@@ -667,6 +679,9 @@ val LOJBAN_TEKSTOJ = TradukTekstoj(
   pasoj = "lo stapa",
   pasRapido = "lo stapa sutra",
   restarigiPasojn = "krasi stapa",
+  vertikalaLokoTitolo = "ni'u ma'u stuzi ( li 64 64 64 64 )",
+  alteco = "galfi'i",
+  spacoAlKerno = "tsani bi'i midju",
 )
 
 // ⟪ Verdurian Lingvo ( soa vdrean ) ⟫
@@ -796,6 +811,9 @@ val VERDURIAN_TEKSTOJ = TradukTekstoj(
   pasoj = "Pasos",
   pasRapido = "Ritmo",
   restarigiPasojn = "Reiniciar",
+  vertikalaLokoTitolo = "Stutan Erto ( 4 Riden 64 )",
+  alteco = "Altet",
+  spacoAlKerno = "Spas el Kour",
 )
 
 // ⟪ Quechua Lingvo ( Runasimi ) ⟫
@@ -925,6 +943,9 @@ val QUECHUA_TEKSTOJ = TradukTekstoj(
   pasoj = "Tatkichaykuna",
   pasRapido = "Tatkiy Utqay",
   restarigiPasojn = "Kutichiy",
+  vertikalaLokoTitolo = "Saywa Kiti ( 4 Chawpi 64 )",
+  alteco = "Hanaqkay",
+  spacoAlKerno = "Hawa Pacha Ukhu Pacha",
 )
 
 // ⟪ Mapudungun Lingvo ⟫
@@ -1054,6 +1075,9 @@ val MAPUDUNGUN_TEKSTOJ = TradukTekstoj(
   pasoj = "Trekan",
   pasRapido = "Trekan Lef",
   restarigiPasojn = "Wiñol",
+  vertikalaLokoTitolo = "Wenu Mapu Meli ( 4 Xokiñ 64 )",
+  alteco = "Wenu",
+  spacoAlKerno = "Wenu Püllü Xokiñ",
 )
 
 // ⟪ Finnish Lingvo ( Suomi ) ⟫
@@ -1183,6 +1207,9 @@ val FINNISH_TEKSTOJ = TradukTekstoj(
   pasoj = "Askeleet",
   pasRapido = "Tahti",
   restarigiPasojn = "Nollaa",
+  vertikalaLokoTitolo = "Pystysijainti ( 4 Jakoa 64 )",
+  alteco = "Korkeus",
+  spacoAlKerno = "Avaruudesta Ytimeen",
 )
 
 // ⟪ Vietnamese Lingvo ( Tiếng Việt ) ⟫
@@ -1312,6 +1339,9 @@ val VIETNAMESE_TEKSTOJ = TradukTekstoj(
   pasoj = "Bước chân",
   pasRapido = "Nhịp bước",
   restarigiPasojn = "Đặt lại",
+  vertikalaLokoTitolo = "Vị Trí Đứng ( 4 Phân Vùng 64 )",
+  alteco = "Độ Cao",
+  spacoAlKerno = "Không Gian Đến Lõi",
 )
 
 // ⟪ Thai Lingvo ( ไทย ) ⟫
@@ -1441,6 +1471,9 @@ val THAI_TEKSTOJ = TradukTekstoj(
   pasoj = "ก้าวเดิน",
   pasRapido = "ความเร็วเดิน",
   restarigiPasojn = "รีเซ็ต",
+  vertikalaLokoTitolo = "ตำแหน่งแนวตั้ง ( 4 ระดับ 64 )",
+  alteco = "ระดับความสูง",
+  spacoAlKerno = "จากอวกาศสู่แกนโลก",
 )
 
 // ⟪ Mandarin Lingvo ( 中文 ( 普通话 ) ) ⟫
@@ -1570,6 +1603,9 @@ val MANDARIN_TEKSTOJ = TradukTekstoj(
   pasoj = "步数",
   pasRapido = "步频",
   restarigiPasojn = "重置",
+  vertikalaLokoTitolo = "垂直位置 ( 4 级 64 分割 )",
+  alteco = "高度",
+  spacoAlKerno = "太空至地核",
 )
 
 // ⟪ Arabic Lingvo ( العربية ) ⟫
@@ -1699,6 +1735,9 @@ val ARABIC_TEKSTOJ = TradukTekstoj(
   pasoj = "الخطوات",
   pasRapido = "إيقاع الخطوات",
   restarigiPasojn = "إعادة ضبط",
+  vertikalaLokoTitolo = "الموقع العمودي ( 4 مستويات من 64 )",
+  alteco = "الارتفاع",
+  spacoAlKerno = "من الفضاء إلى اللب",
 )
 
 // ⟪ Indonesian Lingvo ( Bahasa Indonesia ) ⟫
@@ -1828,6 +1867,9 @@ val INDONESIAN_TEKSTOJ = TradukTekstoj(
   pasoj = "Langkah",
   pasRapido = "Irama Langkah",
   restarigiPasojn = "Atur Ulang",
+  vertikalaLokoTitolo = "Lokasi Vertikal ( 4 Pembagian 64 )",
+  alteco = "Elevasi",
+  spacoAlKerno = "Angkasa ke Inti",
 )
 
 val KHMER_TEKSTOJ = TradukTekstoj(
@@ -1956,6 +1998,9 @@ val KHMER_TEKSTOJ = TradukTekstoj(
   pasoj = "ជំហាន",
   pasRapido = "ល្បឿនជំហាន",
   restarigiPasojn = "កំណត់ឡើងវិញ",
+  vertikalaLokoTitolo = "ទីតាំងបញ្ឈរ ( ៤ កម្រិតនៃ ៦៤ )",
+  alteco = "រយៈកម្ពស់",
+  spacoAlKerno = "ពីលំហទៅស្នូល",
 )
 
 val SPANISH_TEKSTOJ = TradukTekstoj(
@@ -2084,6 +2129,9 @@ val SPANISH_TEKSTOJ = TradukTekstoj(
   pasoj = "Pasos",
   pasRapido = "Ritmo",
   restarigiPasojn = "Reiniciar",
+  vertikalaLokoTitolo = "Ubicación Vertical ( 4 Divisiones de 64 )",
+  alteco = "Elevación",
+  spacoAlKerno = "Del Espacio al Núcleo",
 )
 
 val FRENCH_TEKSTOJ = TradukTekstoj(
@@ -2212,6 +2260,9 @@ val FRENCH_TEKSTOJ = TradukTekstoj(
   pasoj = "Pas",
   pasRapido = "Cadence",
   restarigiPasojn = "Réinitialiser",
+  vertikalaLokoTitolo = "Position Verticale ( 4 Divisions de 64 )",
+  alteco = "Élévation",
+  spacoAlKerno = "De l'Espace au Noyau",
 )
 
 val GERMAN_TEKSTOJ = TradukTekstoj(
@@ -2340,6 +2391,9 @@ val GERMAN_TEKSTOJ = TradukTekstoj(
   pasoj = "Schritte",
   pasRapido = "Schrittfrequenz",
   restarigiPasojn = "Zurücksetzen",
+  vertikalaLokoTitolo = "Vertikale Position ( 4 Einteilungen von 64 )",
+  alteco = "Höhe",
+  spacoAlKerno = "Vom Weltraum zum Erdkern",
 )
 
 val JAPANESE_TEKSTOJ = TradukTekstoj(
@@ -2468,6 +2522,9 @@ val JAPANESE_TEKSTOJ = TradukTekstoj(
   pasoj = "歩数",
   pasRapido = "ケイデンス",
   restarigiPasojn = "リセット",
+  vertikalaLokoTitolo = "垂直位置 ( 64 の 4 分割 )",
+  alteco = "標高",
+  spacoAlKerno = "宇宙からコアまで",
 )
 
 val TOKI_PONA_TEKSTOJ = TradukTekstoj(
@@ -2596,6 +2653,9 @@ val TOKI_PONA_TEKSTOJ = TradukTekstoj(
   pasoj = "noka",
   pasRapido = "tenpo noka",
   restarigiPasojn = "sin noka",
+  vertikalaLokoTitolo = "ma sewi ma anpa ( kipisi 64 64 64 64 )",
+  alteco = "sewi",
+  spacoAlKerno = "sewi tawa insa ma",
 )
 
 fun preniTradukojn(lingvo: Lingvo): TradukTekstoj {

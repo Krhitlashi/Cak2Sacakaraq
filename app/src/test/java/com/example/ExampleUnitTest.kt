@@ -53,5 +53,58 @@ class ExampleUnitTest {
     val suno = kalkuliSunon(-77.8419, 166.6863, System.currentTimeMillis())
     assertTrue(suno.taglumoProgreso in 0.0..1.0)
   }
+
+  @Test
+  fun testVertikalaLokoKalkuloj() {
+    // ⟪ Spaco al Kerno ( 4 Niveloj po 64 ) 🌐 ⟫
+    val spaco = akiriVertikalanLokon(SPACA_ALTECO_METROJ)
+    assertEquals(0, spaco.z1)
+    assertEquals(0, spaco.z2)
+    assertEquals(0, spaco.z3)
+    assertEquals(0, spaco.z4)
+
+    val kerno = akiriVertikalanLokon(-TERA_RADIALA_PROFUNDECO_METROJ)
+    assertEquals(63, kerno.z1)
+    assertEquals(63, kerno.z2)
+    assertEquals(63, kerno.z3)
+    assertEquals(63, kerno.z4)
+
+    val tekstoDekuma = kerno.alDekumaTeksto(Lingvo.ESPERANTO)
+    assertEquals("64 64 64 64", tekstoDekuma)
+
+    val maraNivelo = akiriVertikalanLokon(0.0)
+    assertTrue(maraNivelo.z1 in 0..63)
+    assertTrue(maraNivelo.z2 in 0..63)
+    assertTrue(maraNivelo.z3 in 0..63)
+    assertTrue(maraNivelo.z4 in 0..63)
+
+    // Kontroli rekonstruon
+    val reAlteco = vertikaloAlAlteco(maraNivelo.z1, maraNivelo.z2, maraNivelo.z3, maraNivelo.z4)
+    assertEquals(0.0, reAlteco, 1.0)
+
+    // Kontroli tekstan malakiron
+    val parsita = malakiriVertikalanLokon("64 64 64 64")
+    assertNotNull(parsita)
+    assertEquals(63, parsita!!.z1)
+    assertEquals(63, parsita.z2)
+    assertEquals(63, parsita.z3)
+    assertEquals(63, parsita.z4)
+  }
+
+  @Test
+  fun testTradukojVertikalaLoko() {
+    for (lingvo in Lingvo.values()) {
+      val tradukoj = preniTradukojn(lingvo)
+      if (lingvo == Lingvo.AIH) {
+        assertEquals("", tradukoj.vertikalaLokoTitolo)
+        assertEquals("", tradukoj.alteco)
+        assertEquals("", tradukoj.spacoAlKerno)
+      } else {
+        assertTrue(tradukoj.vertikalaLokoTitolo.isNotEmpty())
+        assertTrue(tradukoj.alteco.isNotEmpty())
+        assertTrue(tradukoj.spacoAlKerno.isNotEmpty())
+      }
+    }
+  }
 }
 

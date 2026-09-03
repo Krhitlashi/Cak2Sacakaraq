@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 // ≺⧼ Datumbazo 🗄️ ⧽≻
 
-@Database(entities = [LokoLogEntity::class], version = 1, exportSchema = false)
+@Database(entities = [LokoLogEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
   abstract fun lokoLogDao(): LokoLogDao
 

@@ -635,6 +635,15 @@ fun ProtokolEroKarto(
       fontWeight = FontWeight.Bold
     )
 
+    val vertikalo = remember(ero) { ero.akiriVertikalan() }
+    val vertTeksto = if (uzuBazo10) vertikalo.alDekumaTeksto(lingvo) else vertikalo.alOksalaTeksto()
+    Text(
+      text = "${tradukoj.vertikalaLokoTitolo} — $vertTeksto",
+      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      fontSize = 12.sp,
+      fontWeight = FontWeight.Medium
+    )
+
     Spacer(modifier = Modifier.height(8.dp))
 
     Row(

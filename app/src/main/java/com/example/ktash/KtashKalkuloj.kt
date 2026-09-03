@@ -589,6 +589,79 @@ data class KsakaNomoj(
   val chmuah: String
 )
 
+// ⟪ Vertikala Loko ( 4 Niveloj de 64 ) 🌐 ⟫
+
+const val SPACA_ALTECO_METROJ = 100000.0 // 100 km ( Karman-linio spaca limo )
+const val TERA_RADIALA_PROFUNDECO_METROJ = 6300000.0 // 6300 km ( tera kerno )
+const val TUTA_VERTIKALA_ALTECO_METROJ = 6400000.0 // 6400 km = 64 * 100 km ( de spaco al kerno )
+
+data class VertikalaLoko(
+  val z1: Int,
+  val z2: Int,
+  val z3: Int,
+  val z4: Int,
+  val altecoMetroj: Double = 0.0
+) {
+  fun alOksalaTeksto(): String {
+    return "${vab6caja((z1 + 1).toLong())} ${vab6caja((z2 + 1).toLong())} ${vab6caja((z3 + 1).toLong())} ${vab6caja((z4 + 1).toLong())}"
+  }
+
+  fun alDekumaTeksto(lingvo: Lingvo = Lingvo.ESPERANTO): String {
+    val kruda = "${z1 + 1} ${z2 + 1} ${z3 + 1} ${z4 + 1}"
+    return tradukiCiferojn(kruda, lingvo)
+  }
+}
+
+/**
+ * Kalkulas la 4 nivelojn de vertikala loko el alteco en metroj.
+ * La skalo etendiĝas de spaco ( 100 km super marnivelo ) ĝis tera kerno ( 6300 km sub marnivelo ),
+ * dividita en 4 niveloj po 64 unuoj ( entute 64^4 = 16777216 unuoj ).
+ */
+fun akiriVertikalanLokon(altecoMetroj: Double): VertikalaLoko {
+  val distancoDeSpaco = (SPACA_ALTECO_METROJ - altecoMetroj).coerceIn(0.0, TUTA_VERTIKALA_ALTECO_METROJ - 0.000001)
+  val dividoj = listOf(64, 64, 64, 64)
+  val niveloj = kalkuliKadronivelojn(distancoDeSpaco, TUTA_VERTIKALA_ALTECO_METROJ, dividoj)
+  return VertikalaLoko(
+    z1 = niveloj[0],
+    z2 = niveloj[1],
+    z3 = niveloj[2],
+    z4 = niveloj[3],
+    altecoMetroj = altecoMetroj
+  )
+}
+
+/**
+ * Rekonstruas altecon en metroj el la 4 niveloj de 64.
+ */
+fun vertikaloAlAlteco(z1: Int, z2: Int, z3: Int, z4: Int): Double {
+  val d1 = z1.toDouble() / 64.0
+  val d2 = z2.toDouble() / (64.0 * 64.0)
+  val d3 = z3.toDouble() / (64.0 * 64.0 * 64.0)
+  val d4 = z4.toDouble() / (64.0 * 64.0 * 64.0 * 64.0)
+  val frakcio = d1 + d2 + d3 + d4
+  val distanco = frakcio * TUTA_VERTIKALA_ALTECO_METROJ
+  return SPACA_ALTECO_METROJ - distanco
+}
+
+/**
+ * Malakiras vertikalan lokon el teksto ( ekz "64 64 64 64" aŭ "ıɔɔ ıɔɔ ıɔɔ ıɔɔ" ).
+ */
+fun malakiriVertikalanLokon(teksto: String): VertikalaLoko? {
+  val purigita = teksto.trim()
+  val partoj = purigita.split(Regex("\\s+")).filter { it.isNotEmpty() }
+  if (partoj.size != 4) return null
+  val valoroj = partoj.map { p ->
+    val v = if (p.any { ch -> K2FE_MAP.containsKey(ch.toString()) }) {
+      malvab6caja(p)?.toInt()
+    } else {
+      p.toIntOrNull()
+    }
+    v?.minus(1)?.coerceIn(0, 63) ?: return null
+  }
+  val alteco = vertikaloAlAlteco(valoroj[0], valoroj[1], valoroj[2], valoroj[3])
+  return VertikalaLoko(valoroj[0], valoroj[1], valoroj[2], valoroj[3], alteco)
+}
+
 fun kalkuliKadronivelojn(valoro: Double, total: Double, dividoj: List<Int>): List<Int> {
   var kruda = (valoro / total) * dividoj[0]
   if (kruda >= dividoj[0]) kruda = dividoj[0] - 0.000001

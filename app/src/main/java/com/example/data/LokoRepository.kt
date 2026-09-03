@@ -27,6 +27,7 @@ class LokoRepository(
   suspend fun registriLokon(
     lat: Double,
     lon: Double,
+    alteco: Double = 0.0,
     rapido: Double = 0.0,
     noto: String? = null,
     devigiRegistradon: Boolean = false
@@ -46,6 +47,7 @@ class LokoRepository(
     }
 
     val kadro = akiriKadrajnKoordinatojn(lat, lon)
+    val vertikalo = akiriVertikalanLokon(alteco)
     val nomoj = akiriNomojn(kadro)
     val dato = cax2lStafl2(nunMs)
 
@@ -55,6 +57,11 @@ class LokoRepository(
     val novaProtokolo = LokoLogEntity(
       latitudo = lat,
       longitudo = lon,
+      altecoMetroj = 0.0,
+      z1 = vertikalo.z1,
+      z2 = vertikalo.z2,
+      z3 = vertikalo.z3,
+      z4 = vertikalo.z4,
       tempoMilisekundoj = nunMs,
       ksakaNomo = nomoj.ksaka,
       latinaNomo = nomoj.latina,

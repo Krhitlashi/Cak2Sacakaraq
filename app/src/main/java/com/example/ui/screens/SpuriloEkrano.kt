@@ -110,6 +110,28 @@ fun SpuriloEkrano(
 
       Spacer(modifier = Modifier.height(12.dp))
 
+      val vertikalaLoko = remember(nunaLoko.alteco) {
+        akiriVertikalanLokon(nunaLoko.alteco)
+      }
+
+      Text(
+        text = tradukoj.vertikalaLokoTitolo,
+        color = MaterialTheme.colorScheme.primary,
+        fontSize = 13.sp,
+        fontWeight = FontWeight.Bold
+      )
+      Spacer(modifier = Modifier.height(8.dp))
+
+      Text(
+        text = if (uzuBazo10) vertikalaLoko.alDekumaTeksto(lingvo) else vertikalaLoko.alOksalaTeksto(),
+        color = MaterialTheme.colorScheme.onSurface,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        lineHeight = 26.sp
+      )
+
+      Spacer(modifier = Modifier.height(12.dp))
+
       Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -127,6 +149,16 @@ fun SpuriloEkrano(
           Text(tradukoj.longitudo, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
           Text(
             text = "${formatiOksaleAuxDekume(nunaLoko.longitudo, uzuBazo10, 5, lingvo)}°",
+            color = MaterialTheme.colorScheme.onSurface,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold
+          )
+        }
+        Column {
+          Text(tradukoj.alteco, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 11.sp)
+          val altecoPeu = remember(nunaLoko.alteco) { metrojAlPeu(nunaLoko.alteco) }
+          Text(
+            text = "${formatiOksaleAuxDekume(altecoPeu, uzuBazo10, 1, lingvo)} ${tradukoj.unuoPeu}",
             color = MaterialTheme.colorScheme.onSurface,
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold
@@ -298,6 +330,14 @@ fun SpuriloEkrano(
           color = MaterialTheme.colorScheme.onSurface,
           fontSize = 18.sp,
           fontWeight = FontWeight.Bold
+        )
+
+        val lastaVert = remember(lasta) { lasta.akiriVertikalan() }
+        Text(
+          text = "${tradukoj.vertikalaLokoTitolo} — ${if (uzuBazo10) lastaVert.alDekumaTeksto(lingvo) else lastaVert.alOksalaTeksto()}",
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          fontSize = 12.sp,
+          fontWeight = FontWeight.Medium
         )
 
         Spacer(modifier = Modifier.height(8.dp))

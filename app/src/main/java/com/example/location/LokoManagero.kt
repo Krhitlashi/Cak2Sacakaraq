@@ -169,31 +169,35 @@ class LokoManagero(
     val loko = preniNunanLokon()
     val lat: Double
     val lon: Double
+    val alteco: Double
     val rapido: Double
 
     if (loko != null) {
       lat = loko.latitude
       lon = loko.longitude
+      alteco = if (loko.hasAltitude()) loko.altitude else _nunaLoko.value.alteco
       rapido = loko.speed.toDouble()
     } else {
-      // Defaŭltaj koordinatoj se GPS ne haveblas (47.48, -122.21 el la specifo)
+      // Defaŭltaj koordinatoj se GPS ne haveblas ( 47.48 -122.21 el la specifo )
       val nuna = _nunaLoko.value
       lat = nuna.latitudo
       lon = nuna.longitudo
+      alteco = nuna.alteco
       rapido = nuna.rapido
     }
 
-    val registrita = deponejo.registriLokon(lat, lon, rapido, noto, devigiRegistradon = devigi)
+    val registrita = deponejo.registriLokon(lat, lon, alteco, rapido, noto, devigiRegistradon = devigi)
     if (registrita != null) {
       _lastaRegistrita.value = registrita
     }
     registrita
   }
 
-  fun manaĝiKoordinatojn(lat: Double, lon: Double) {
+  fun manaĝiKoordinatojn(lat: Double, lon: Double, alteco: Double = 0.0) {
     _nunaLoko.value = LokoStato(
       latitudo = lat,
       longitudo = lon,
+      alteco = alteco,
       akurateco = 1.0f,
       rapido = 0.0,
       fonto = "Manaĝe Agordita"
@@ -203,6 +207,7 @@ class LokoManagero(
   private fun ĝisdatigiLokanStaton(loko: Location) {
     val novaLat = loko.latitude
     val novaLon = loko.longitude
+    val novaAlteco = if (loko.hasAltitude()) loko.altitude else _nunaLoko.value.alteco
     val nunaRapido = loko.speed.toDouble()
 
     val lastLat = lastaVivaLatitudo
@@ -224,6 +229,7 @@ class LokoManagero(
     _nunaLoko.value = LokoStato(
       latitudo = novaLat,
       longitudo = novaLon,
+      alteco = novaAlteco,
       akurateco = loko.accuracy,
       rapido = nunaRapido,
       fonto = "GPS"
@@ -234,6 +240,7 @@ class LokoManagero(
 data class LokoStato(
   val latitudo: Double,
   val longitudo: Double,
+  val alteco: Double = 0.0,
   val akurateco: Float,
   val rapido: Double,
   val fonto: String
@@ -242,6 +249,7 @@ data class LokoStato(
     val Defaŭlta = LokoStato(
       latitudo = 47.48,
       longitudo = -122.21,
+      alteco = 40.0,
       akurateco = 10.0f,
       rapido = 0.0,
       fonto = "Defaŭlta"

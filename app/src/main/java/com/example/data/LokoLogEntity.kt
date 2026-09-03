@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.ktash.KadrajKoordinatoj
 import com.example.ktash.KsakaNomoj
+import com.example.ktash.VertikalaLoko
 
 // ≺⧼ Loka Enskribo 📝 ⧽≻
 
@@ -12,6 +13,11 @@ data class LokoLogEntity(
   @PrimaryKey(autoGenerate = true) val id: Long = 0L,
   val latitudo: Double,
   val longitudo: Double,
+  val altecoMetroj: Double = 0.0,
+  val z1: Int = 0,
+  val z2: Int = 0,
+  val z3: Int = 0,
+  val z4: Int = 0,
   val tempoMilisekundoj: Long,
   val ksakaNomo: String,
   val latinaNomo: String,
@@ -31,5 +37,7 @@ data class LokoLogEntity(
   val noto: String? = null
 ) {
   fun akiriKadrajn(): KadrajKoordinatoj = KadrajKoordinatoj(v1, h1, v2, h2, v3, h3, v4, h4)
+  fun akiriVertikalan(): VertikalaLoko = VertikalaLoko(z1, z2, z3, z4, altecoMetroj)
   fun akiriNomojn(): KsakaNomoj = KsakaNomoj(ksakaNomo, latinaNomo, chmuahNomo)
 }
+
